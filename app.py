@@ -59,8 +59,10 @@ if not "ranking.csv" in os.listdir(f"competition/{load_confing['competition'][in
     ranking_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/ranking.csv"
     ranking_df = pd.DataFrame(columns=['Name', 'Group', 'Accuracy', 'Recall', 'Precision', 'F1-score', 'AUC', 'Comment', 'Submitted Time'])
     ranking_df.to_csv(ranking_file_patn, index=False) 
-ranking_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/ranking.csv"
-ranking_df = pd.read_csv(ranking_file_patn)
+    print('ランキングファイルを作成しました。')
+else:
+    ranking_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/ranking.csv"
+    ranking_df = pd.read_csv(ranking_file_patn)
 
 answercsv_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/submission_answer.csv"
 
@@ -88,16 +90,15 @@ with st.sidebar:
     # グループ名検索
     st.title('グループ名で検索')
     search_group_name = st.text_input('グループ名を入力してください。', key='input_group_name2search')
-    btn_serach, btn_reset, _ = st.columns(3)
-    if btn_serach.button('完全一致', key='search_group_name'):
+    if st.button('完全一致', key='search_group_name'):
         flag_filtered = 'exact'
         df_info['group_filter'] = 'exact'
         df_info.to_csv('info.csv', header=False)
-    if btn_serach.button('部分一致', key='search_group_name_partial'):
+    if st.button('部分一致', key='search_group_name_partial'):
         flag_filtered = 'partial'
         df_info['group_filter'] = 'partial'
         df_info.to_csv('info.csv', header=False)
-    if btn_reset.button('リセット', key='reset_group_name'):
+    if st.button('リセット', key='reset_group_name'):
         flag_filtered = 'none'
         df_info['group_filter'] = 'none'
         df_info.to_csv('info.csv', header=False)
@@ -193,10 +194,31 @@ with st.sidebar:
     
         st.write('---') 
         st.markdown('## ランキングを出力')
-
         # 現在のランキングをcsvファイルで出力
         st.download_button('ランキングを CSV ファイルで出力', ranking_df.iloc[:,1:].to_csv(index=False), ranking_file_patn)
         
+        st.markdown('## 過去のランキングを反映')
+        # 過去のランキングを反映
+        _uploaded_ranking_file = st.file_uploader("過去のランキングをアップロードしてください。", type="csv", key='file_uploader3')
+        if st.button('ランキングを反映', key='reflect_ranking') and _uploaded_ranking_file is not None:
+            _ranking_df = pd.read_csv(_uploaded_ranking_file)
+            if ranking_df.columns.drop('Rank').tolist() == _ranking_df.columns.tolist():
+                ranking_df = _ranking_df
+                ranking_df.to_csv(ranking_file_patn, index=False)
+
+                # 指定した評価指標でソート
+                ranking_df = ranking_df.sort_values(selected_score, ascending=False)
+                # ランクを付与
+                rank = ranking_df[selected_score].rank(method='min', ascending=False).astype(int)
+                ranking_df.insert(0, 'Rank', rank)
+                # ランクでソート
+                ranking_df = ranking_df.sort_values('Rank', ascending=True)
+                # インデックスを振り直す
+                ranking_df = ranking_df.reset_index(drop=True)
+                st.write('ランキングを反映しました。')
+            else:
+                st.write('Error：カラム名が一致しません。')
+
         st.write('---')
         st.markdown('## ランキングの編集')
         st.write(ranking_df.iloc[:,1:])
@@ -220,7 +242,7 @@ with st.sidebar:
         # st.write(ranking_df.iloc[:3, :3])
 
         # ランキングをリセット 
-        if st.button('ランキングをリセット'):
+        if st.button('ランキングをリセット', key='reset_ranking'):
             ranking_df = pd.DataFrame(columns=['Name', 'Group', 'Accuracy', 'Recall', 'Precision', 'F1-score', 'AUC', 'Comment', 'Submitted Time'])
             ranking_df.to_csv(ranking_file_patn, index=False) 
 
@@ -233,7 +255,7 @@ with st.sidebar:
 
 # タイトルを表示
 st.title(selected_comp)
-st.markdown('## Submit your prediction')
+st.markdown('## あなたのスコアを提出しよう！')
 
 # 答えの csv ファイルを読み込み
 df_answer = pd.read_csv(answercsv_file_patn)
@@ -328,26 +350,26 @@ if len(ranking_df) > 0 and flag_tier1:
 
 # アップロードされたデータを表示
 if len(ranking_df) > 0 and flag_submit:
-    st.write('Your submission')
+    st.markdown('## あなたが提出したスコア！')
     st.write(ranking_df[ranking_df['Name'] == challenger_name].to_html(index=True, index_names=True), unsafe_allow_html=True)   
     flag_submit = False
+
+#Rank 列を削除して保存
+if 'Rank' in ranking_df.columns:
+    ranking_df.drop(labels=['Rank'], axis=1).to_csv(ranking_file_patn, index=False)
 
 st.markdown('## Leaderboard')
 
 # Group名でフィルタリングされたら
 if flag_filtered == 'partial':
     ranking_df = ranking_df[ranking_df['Group'].str.contains(search_group_name, na=False)]
+    st.markdown(f'### グループ名が {search_group_name} に部分一致')
 elif flag_filtered == 'exact':
     ranking_df = ranking_df[ranking_df['Group'] == search_group_name]
+    st.markdown(f'### グループ名が {search_group_name} に完全一致')
 
-else:
-
-    float_columns = ranking_df.select_dtypes(include=['float64']).columns
-    ranking_df[float_columns] = ranking_df[float_columns].applymap("{:.2f}".format)
-
-    #Rank 列を削除
-    if 'Rank' in ranking_df.columns:
-        ranking_df.drop(columns=['Rank']).to_csv(ranking_file_patn, index=False)
+float_columns = ranking_df.select_dtypes(include=['float64']).columns
+ranking_df[float_columns] = ranking_df[float_columns].applymap("{:.2f}".format)
 
 ranking_df['Comment'] = ranking_df['Comment'].fillna('')
 ranking_df['Submitted Time'] = ranking_df['Submitted Time'].fillna('')
@@ -359,4 +381,3 @@ df_html = ranking_df.to_html(index=True, index_names=True)
 st.write(df_html, unsafe_allow_html=True)
 
 st.write('---')
-
