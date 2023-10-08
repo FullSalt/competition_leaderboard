@@ -7,4 +7,4 @@ credentials:
     kikagaku:
       email: kikagaku@kikagaku.co.jp
       name: KIKAGAKU
-      password: !!python/object/apply:os.getenv ["ADMIN_SECRET_PASSWORD"]
+      password: $2b$12$skwu4Jr4JFGGswlCEXiHw.DdrZsSLua0TKjDEtDph9JdrkSx87FKu
