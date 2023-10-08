@@ -3,17 +3,23 @@
         {
             "competition_name": "Bank Marketing",
             "competition_dir": "bankmarketing",
-            "competition_target": "class"
+            "competition_target": "class",
+            "train_csv": "bank_train.csv",
+            "test_csv": "bank_test_noresult.csv"
         },
         {
             "competition_name": "Titanic",
             "competition_dir": "titanic",
-            "competition_target": "Survived"
+            "competition_target": "Survived",
+            "train_csv": "titanic_train.csv",
+            "test_csv": "titanic_test.csv"
         },
         {
             "competition_name": "Woman Clothing Review",
             "competition_dir": "clothingreview",
-            "competition_target": "Recommended IND"
+            "competition_target": "Recommended IND",
+            "train_csv": "clothingreview_train.csv",
+            "test_csv": "clothingreview_test.csv"
         }
     ]
 }

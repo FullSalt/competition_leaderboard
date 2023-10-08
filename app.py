@@ -65,6 +65,8 @@ else:
     ranking_df = pd.read_csv(ranking_file_patn)
 
 answercsv_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/submission_answer.csv"
+traincsv_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/{load_confing['competition'][index]['train_csv']}"
+testcsv_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/{load_confing['competition'][index]['test_csv']}"
 
 flag_filtered = df_info['group_filter']
 
@@ -167,10 +169,10 @@ with st.sidebar:
 
         st.write('---')
         st.markdown('## コンペティションの削除')
-        if len([item['competition_name'] for item in load_confing['competition']]) < 3:
+        if len([item['competition_name'] for item in load_confing['competition']]) < 4:
             _competition_names = ['選択してください']
         else:
-            _competition_names = ['選択してください'] + [item['competition_name'] for item in load_confing['competition']][2:]
+            _competition_names = ['選択してください'] + [item['competition_name'] for item in load_confing['competition']][3:]
 
         _selected_comp = st.selectbox('コンペティションを選択してください。', _competition_names, key='deletecomplist')
         if st.button('消去', key='delete_comp') and _selected_comp != '選択してください':
@@ -255,7 +257,21 @@ with st.sidebar:
 
 # タイトルを表示
 st.title(selected_comp)
-st.markdown('## あなたのスコアを提出しよう！')
+st.write('---')
+
+st.markdown('## コンペティションの説明')
+st.write(f"""
+         下記のtrain.csv をクリックしてダウンロードできるデータから、{load_confing['competition'][index]['competition_target']} を予測する分類モデルを作成して、
+         その学習済みモデルから下記のtest.csv をクリックしてダウンロードできるデータに対して予測値を計算し、CSVファイルとして提出してください。""")
+
+st.write('学習に使用するデータ')
+st.download_button('train.csv',data=pd.read_csv(traincsv_file_patn).to_csv(index=False) ,file_name=os.path.basename(traincsv_file_patn))
+
+st.write('正解のない評価用のデータ')
+st.download_button('test.csv',data=pd.read_csv(testcsv_file_patn).to_csv(index=False) ,file_name=os.path.basename(testcsv_file_patn))
+
+st.write('---')
+st.markdown('## スコアを提出しよう！')
 
 # 答えの csv ファイルを読み込み
 df_answer = pd.read_csv(answercsv_file_patn)
