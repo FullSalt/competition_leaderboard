@@ -1,0 +1,10 @@
+cookie:
+  expiry_days: 0
+  key: some_signature_keys
+  name: some_cookie_name
+credentials:
+  usernames:
+    kikagaku:
+      email: kikagaku@kikagaku.co.jp
+      name: KIKAGAKU
+      password: !!python/object/apply:os.getenv ["ADMIN_SECRET_PASSWORD"]

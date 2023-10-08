@@ -1,0 +1,19 @@
+{
+    "competition": [
+        {
+            "competition_name": "Bank Marketing",
+            "competition_dir": "bankmarketing",
+            "competition_target": "class"
+        },
+        {
+            "competition_name": "Titanic",
+            "competition_dir": "titanic",
+            "competition_target": "Survived"
+        },
+        {
+            "competition_name": "Woman Clothing Review",
+            "competition_dir": "clothingreview",
+            "competition_target": "Recommended IND"
+        }
+    ]
+}
