@@ -1,0 +1,13 @@
+cookie:
+  expiry_days: 30
+  key: some_signature_keys2
+  name: some_cookie_name2
+credentials:
+  usernames:
+    student:
+      email: student@kikagaku.co.jp
+      name: STUDENT
+      password: $2b$12$4p54qpewyKpGdgayJ4hcReztDTuKQEa2nt4u4emNU2Qv2xzJXC6Gm
+preauthorized:
+  emails:
+  - melsby2@gmail.com

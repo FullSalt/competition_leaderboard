@@ -1,10 +1,13 @@
-cookie:
-  expiry_days: 0
-  key: some_signature_keys
-  name: some_cookie_name
 credentials:
   usernames:
     kikagaku:
       email: kikagaku@kikagaku.co.jp
       name: KIKAGAKU
       password: $2b$12$skwu4Jr4JFGGswlCEXiHw.DdrZsSLua0TKjDEtDph9JdrkSx87FKu
+cookie:
+  expiry_days: 1
+  key: some_signature_keys
+  name: some_cookie_name
+preauthorized:
+  emails:
+  - melsby@gmail.com
