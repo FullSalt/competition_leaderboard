@@ -378,6 +378,7 @@ def app():
         ranking_df.drop(labels=['Rank'], axis=1).to_csv(ranking_file_patn, index=False)
 
     st.markdown('## Leaderboard')
+    st.markdown(f'### 評価指標：{selected_score}が高い順で表示')
 
     # Group名でフィルタリングされたら
     if flag_filtered == 'partial':
