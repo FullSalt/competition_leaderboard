@@ -7,6 +7,8 @@ import pytz
 import json
 import os
 import shutil
+import pygwalker as pyg
+import streamlit.components.v1 as components
 
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
@@ -268,10 +270,16 @@ def app():
             その学習済みモデルから下記のtest.csv をクリックしてダウンロードできるデータに対して予測値を計算し、CSVファイルとして提出してください。""")
 
     st.write('学習に使用するデータ')
+    df_train = pd.read_csv(traincsv_file_patn)
     st.download_button('train.csv',data=pd.read_csv(traincsv_file_patn).to_csv(index=False) ,file_name=os.path.basename(traincsv_file_patn))
 
     st.write('正解のない評価用のデータ')
     st.download_button('test.csv',data=pd.read_csv(testcsv_file_patn).to_csv(index=False) ,file_name=os.path.basename(testcsv_file_patn))
+
+    st.write('---')
+    st.markdown('## PyGWalker でデータの可視化')
+    pyg_html=pyg.walk(df_train, evn='Streamlit', return_html=True)
+    components.html(pyg_html, height=900, scrolling=True)
 
     st.write('---')
     st.markdown('## スコアを提出しよう！')

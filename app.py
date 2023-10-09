@@ -37,7 +37,7 @@ def main():
     if 'loggedin' not in st.session_state:
         st.session_state.loggedin = False
     if 'user_name' not in st.session_state:
-        st.session_state.user_name = "aaa"
+        st.session_state.user_name = ""
 
     if not st.session_state.loggedin:
         st.subheader("ログイン画面です")
@@ -51,12 +51,9 @@ def main():
 
             result = login_user(user_name, check_hashes(password, hashed_pswd))
             if result:
-                print(user_name)
-                print(st.session_state.user_name)
                 st.success("{}さんでログインしました".format(user_name))
                 st.session_state.loggedin = True
                 st.session_state.user_name = user_name
-                print(st.session_state.user_name)
                 app()
             else:
                 st.warning("ユーザー名かパスワードが間違っています")
