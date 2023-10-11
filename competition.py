@@ -276,10 +276,10 @@ def app():
     st.write('正解のない評価用のデータ')
     st.download_button('test.csv',data=pd.read_csv(testcsv_file_patn).to_csv(index=False) ,file_name=os.path.basename(testcsv_file_patn))
 
-    st.write('---')
-    st.markdown('## PyGWalker でデータの可視化')
-    pyg_html=pyg.walk(df_train, evn='Streamlit', return_html=True)
-    components.html(pyg_html, height=900, scrolling=True)
+    # st.write('---')
+    # st.markdown('## PyGWalker でデータの可視化')
+    # pyg_html=pyg.walk(df_train, evn='Streamlit', return_html=True)
+    # components.html(pyg_html, height=900, scrolling=True)
 
     st.write('---')
     st.markdown('## スコアを提出しよう！')
