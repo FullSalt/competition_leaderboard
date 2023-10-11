@@ -397,7 +397,7 @@ def app():
         st.markdown(f'### グループ名が {search_group_name} に完全一致')
 
     float_columns = ranking_df.select_dtypes(include=['float64']).columns
-    ranking_df[float_columns] = ranking_df[float_columns].applymap("{:.2f}".format)
+    ranking_df[float_columns] = ranking_df[float_columns].apply(lambda col: col.map("{:.2f}".format))
 
     ranking_df['Comment'] = ranking_df['Comment'].fillna('')
     ranking_df['Submitted Time'] = ranking_df['Submitted Time'].fillna('')
