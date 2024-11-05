@@ -122,141 +122,141 @@ def app():
     ranking_df = ranking_df.reset_index(drop=True)
 
     # 管理者用のサイドバー
-    with st.sidebar:
+    # with st.sidebar:
 
-        st.title('管理者用')
+    #     st.title('管理者用')
 
-        # ログインメソッドで入力フォームを配置
-        name, authentication_status, username = authenticator.login('Login', 'sidebar')
-        # print(name, authentication_status, username)
-        # 返り値、authenticaton_statusの状態で処理を場合分け
-        if authentication_status:
-            # logoutメソッドでaurhenciationの値をNoneにする
-            authenticator.logout('Logout', 'sidebar', key='unique_key')
-            st.button('管理者ページの内容の更新を反映', key='update')
-            st.write(f'{name}関係者用の編集ページです。')
-            # st.title('Some content')
+    #     # ログインメソッドで入力フォームを配置
+    #     name, authentication_status, username = authenticator.login('Login', 'sidebar')
+    #     # print(name, authentication_status, username)
+    #     # 返り値、authenticaton_statusの状態で処理を場合分け
+    #     if authentication_status:
+    #         # logoutメソッドでaurhenciationの値をNoneにする
+    #         authenticator.logout('Logout', 'sidebar', key='unique_key')
+    #         st.button('管理者ページの内容の更新を反映', key='update')
+    #         st.write(f'{name}関係者用の編集ページです。')
+    #         # st.title('Some content')
             
-            st.write('---')
-            st.markdown('## コンペティションの追加')
+    #         st.write('---')
+    #         st.markdown('## コンペティションの追加')
 
-            # competition の名前を設定
-            _competition_name = st.text_input('コンペ名を入力してください。')
+    #         # competition の名前を設定
+    #         _competition_name = st.text_input('コンペ名を入力してください。')
 
-            # 答えのcsvファイルをアップロード
-            _uploaded_input_file = st.file_uploader("答えの CSV ファイルをアップロードしてください。", type="csv", key='file_uploader2')
-            if _uploaded_input_file is not None:
-                add_test = pd.read_csv(_uploaded_input_file)
-            _target_name = st.text_input('目的変数のカラム名を入力してください。')
+    #         # 答えのcsvファイルをアップロード
+    #         _uploaded_input_file = st.file_uploader("答えの CSV ファイルをアップロードしてください。", type="csv", key='file_uploader2')
+    #         if _uploaded_input_file is not None:
+    #             add_test = pd.read_csv(_uploaded_input_file)
+    #         _target_name = st.text_input('目的変数のカラム名を入力してください。')
             
-            if st.button('コンペティション情報の保存', key='save_target_name'):
-                if _competition_name == '':
-                    st.write('Error：コンペティション名を入力してください。')
-                elif _competition_name in competition_names:
-                    st.write('Error：同じコンペティションが既に存在しています。')
-                elif _uploaded_input_file is None:
-                    st.write('Error：答えの CSV ファイルをアップロードしてください。')
-                elif not _target_name in add_test.columns:
-                    st.write('Error：csv ファイルの中にそのカラム名が含まれていません。')
-                else:   
-                    # ディレクトリを作成
-                    os.mkdir(f'competition/{_competition_name}')
+    #         if st.button('コンペティション情報の保存', key='save_target_name'):
+    #             if _competition_name == '':
+    #                 st.write('Error：コンペティション名を入力してください。')
+    #             elif _competition_name in competition_names:
+    #                 st.write('Error：同じコンペティションが既に存在しています。')
+    #             elif _uploaded_input_file is None:
+    #                 st.write('Error：答えの CSV ファイルをアップロードしてください。')
+    #             elif not _target_name in add_test.columns:
+    #                 st.write('Error：csv ファイルの中にそのカラム名が含まれていません。')
+    #             else:   
+    #                 # ディレクトリを作成
+    #                 os.mkdir(f'competition/{_competition_name}')
 
-                    add_answercsv_file_patn = f"competition/{_competition_name}/submission_answer.csv"
-                    add_test.to_csv(add_answercsv_file_patn, index=False)
+    #                 add_answercsv_file_patn = f"competition/{_competition_name}/submission_answer.csv"
+    #                 add_test.to_csv(add_answercsv_file_patn, index=False)
 
-                    load_confing['competition'].append({'competition_name': _competition_name, 'competition_dir': _competition_name.lower().replace(" ", ""), 'competition_target': _target_name})
-                    with open('config.json', 'w') as f:
-                        json.dump(load_confing, f, indent=4)
-                    index = next((i for i, item in enumerate(load_confing['competition']) if item['competition_name'] == _competition_name), None)
-                    answercsv_file_patn = f"competition/{_competition_name.lower().replace(' ', '')}/submission_answer.csv"
-                    st.write('コンペティション情報を保存しました。')
+    #                 load_confing['competition'].append({'competition_name': _competition_name, 'competition_dir': _competition_name.lower().replace(" ", ""), 'competition_target': _target_name})
+    #                 with open('config.json', 'w') as f:
+    #                     json.dump(load_confing, f, indent=4)
+    #                 index = next((i for i, item in enumerate(load_confing['competition']) if item['competition_name'] == _competition_name), None)
+    #                 answercsv_file_patn = f"competition/{_competition_name.lower().replace(' ', '')}/submission_answer.csv"
+    #                 st.write('コンペティション情報を保存しました。')
 
-            st.write('---')
-            st.markdown('## コンペティションの削除')
-            if len([item['competition_name'] for item in load_confing['competition']]) < 4:
-                _competition_names = ['選択してください']
-            else:
-                _competition_names = ['選択してください'] + [item['competition_name'] for item in load_confing['competition']][3:]
+    #         st.write('---')
+    #         st.markdown('## コンペティションの削除')
+    #         if len([item['competition_name'] for item in load_confing['competition']]) < 4:
+    #             _competition_names = ['選択してください']
+    #         else:
+    #             _competition_names = ['選択してください'] + [item['competition_name'] for item in load_confing['competition']][3:]
 
-            _selected_comp = st.selectbox('コンペティションを選択してください。', _competition_names, key='deletecomplist')
-            if st.button('消去', key='delete_comp') and _selected_comp != '選択してください':
-                _index = next((i for i, item in enumerate(load_confing['competition']) if item['competition_name'] == _selected_comp), None)
+    #         _selected_comp = st.selectbox('コンペティションを選択してください。', _competition_names, key='deletecomplist')
+    #         if st.button('消去', key='delete_comp') and _selected_comp != '選択してください':
+    #             _index = next((i for i, item in enumerate(load_confing['competition']) if item['competition_name'] == _selected_comp), None)
 
-                # ディレクトリを削除
-                shutil.rmtree(f"competition/{load_confing['competition'][_index]['competition_dir']}")
-                # config.json から削除
-                load_confing['competition'].pop(_index)
-                with open('config.json', 'w') as f:
-                    json.dump(load_confing, f, indent=4)
-                df_info.to_csv('info.csv', header=False)
-                # コンペティション名を再設定
-                index = 0
-                df_info['competition_name'] = load_confing['competition'][index]['competition_name']
-                answercsv_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/submission_answer.csv"
-                ranking_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/ranking.csv"
+    #             # ディレクトリを削除
+    #             shutil.rmtree(f"competition/{load_confing['competition'][_index]['competition_dir']}")
+    #             # config.json から削除
+    #             load_confing['competition'].pop(_index)
+    #             with open('config.json', 'w') as f:
+    #                 json.dump(load_confing, f, indent=4)
+    #             df_info.to_csv('info.csv', header=False)
+    #             # コンペティション名を再設定
+    #             index = 0
+    #             df_info['competition_name'] = load_confing['competition'][index]['competition_name']
+    #             answercsv_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/submission_answer.csv"
+    #             ranking_file_patn = f"competition/{load_confing['competition'][index]['competition_dir']}/ranking.csv"
 
-                df_info['competition_name'] = load_confing['competition'][index]['competition_name']
-                df_info.to_csv('info.csv', header=False)
+    #             df_info['competition_name'] = load_confing['competition'][index]['competition_name']
+    #             df_info.to_csv('info.csv', header=False)
         
-            st.write('---') 
-            st.markdown('## ランキングを出力')
-            # 現在のランキングをcsvファイルで出力
-            st.download_button('ランキングを CSV ファイルで出力', ranking_df.iloc[:,1:].to_csv(index=False), ranking_file_patn)
+    #         st.write('---') 
+    #         st.markdown('## ランキングを出力')
+    #         # 現在のランキングをcsvファイルで出力
+    #         st.download_button('ランキングを CSV ファイルで出力', ranking_df.iloc[:,1:].to_csv(index=False), ranking_file_patn)
             
-            st.markdown('## 過去のランキングを反映')
-            # 過去のランキングを反映
-            _uploaded_ranking_file = st.file_uploader("過去のランキングをアップロードしてください。", type="csv", key='file_uploader3')
-            if st.button('ランキングを反映', key='reflect_ranking') and _uploaded_ranking_file is not None:
-                _ranking_df = pd.read_csv(_uploaded_ranking_file)
-                if ranking_df.columns.drop('Rank').tolist() == _ranking_df.columns.tolist():
-                    ranking_df = _ranking_df
-                    ranking_df.to_csv(ranking_file_patn, index=False)
+    #         st.markdown('## 過去のランキングを反映')
+    #         # 過去のランキングを反映
+    #         _uploaded_ranking_file = st.file_uploader("過去のランキングをアップロードしてください。", type="csv", key='file_uploader3')
+    #         if st.button('ランキングを反映', key='reflect_ranking') and _uploaded_ranking_file is not None:
+    #             _ranking_df = pd.read_csv(_uploaded_ranking_file)
+    #             if ranking_df.columns.drop('Rank').tolist() == _ranking_df.columns.tolist():
+    #                 ranking_df = _ranking_df
+    #                 ranking_df.to_csv(ranking_file_patn, index=False)
 
-                    # 指定した評価指標でソート
-                    ranking_df = ranking_df.sort_values(selected_score, ascending=False)
-                    # ランクを付与
-                    rank = ranking_df[selected_score].rank(method='min', ascending=False).astype(int)
-                    ranking_df.insert(0, 'Rank', rank)
-                    # ランクでソート
-                    ranking_df = ranking_df.sort_values('Rank', ascending=True)
-                    # インデックスを振り直す
-                    ranking_df = ranking_df.reset_index(drop=True)
-                    st.write('ランキングを反映しました。')
-                else:
-                    st.write('Error：カラム名が一致しません。')
+    #                 # 指定した評価指標でソート
+    #                 ranking_df = ranking_df.sort_values(selected_score, ascending=False)
+    #                 # ランクを付与
+    #                 rank = ranking_df[selected_score].rank(method='min', ascending=False).astype(int)
+    #                 ranking_df.insert(0, 'Rank', rank)
+    #                 # ランクでソート
+    #                 ranking_df = ranking_df.sort_values('Rank', ascending=True)
+    #                 # インデックスを振り直す
+    #                 ranking_df = ranking_df.reset_index(drop=True)
+    #                 st.write('ランキングを反映しました。')
+    #             else:
+    #                 st.write('Error：カラム名が一致しません。')
 
-            st.write('---')
-            st.markdown('## ランキングの編集')
-            st.write(ranking_df.iloc[:,1:])
-            # 消去するインデックスを入力
-            if len(ranking_df) > 0:
-                cleared_num = st.number_input('消去するインデックスを入力', min_value=0, max_value=len(ranking_df)-1)
-            if st.button('消去', key="deleteindex") and len(ranking_df) > 0:
-                ranking_df = pd.read_csv(ranking_file_patn)
-                ranking_df = ranking_df.drop(index=cleared_num)
-                ranking_df.to_csv(ranking_file_patn, index=False)
+    #         st.write('---')
+    #         st.markdown('## ランキングの編集')
+    #         st.write(ranking_df.iloc[:,1:])
+    #         # 消去するインデックスを入力
+    #         if len(ranking_df) > 0:
+    #             cleared_num = st.number_input('消去するインデックスを入力', min_value=0, max_value=len(ranking_df)-1)
+    #         if st.button('消去', key="deleteindex") and len(ranking_df) > 0:
+    #             ranking_df = pd.read_csv(ranking_file_patn)
+    #             ranking_df = ranking_df.drop(index=cleared_num)
+    #             ranking_df.to_csv(ranking_file_patn, index=False)
 
-                # 指定した評価指標でソート
-                ranking_df = ranking_df.sort_values(selected_score, ascending=False)
-                # ランクを付与
-                rank = ranking_df[selected_score].rank(method='min', ascending=False).astype(int)
-                ranking_df.insert(0, 'Rank', rank)
-                # ランクでソート
-                ranking_df = ranking_df.sort_values('Rank', ascending=True)
-                # インデックスを振り直す
-                ranking_df = ranking_df.reset_index(drop=True)
-            # st.write(ranking_df.iloc[:3, :3])
+    #             # 指定した評価指標でソート
+    #             ranking_df = ranking_df.sort_values(selected_score, ascending=False)
+    #             # ランクを付与
+    #             rank = ranking_df[selected_score].rank(method='min', ascending=False).astype(int)
+    #             ranking_df.insert(0, 'Rank', rank)
+    #             # ランクでソート
+    #             ranking_df = ranking_df.sort_values('Rank', ascending=True)
+    #             # インデックスを振り直す
+    #             ranking_df = ranking_df.reset_index(drop=True)
+    #         # st.write(ranking_df.iloc[:3, :3])
 
-            # ランキングをリセット 
-            if st.button('ランキングをリセット', key='reset_ranking'):
-                ranking_df = pd.DataFrame(columns=['Name', 'Group', 'Accuracy', 'Recall', 'Precision', 'F1-score', 'AUC', 'Comment', 'Submitted Time'])
-                ranking_df.to_csv(ranking_file_patn, index=False) 
+    #         # ランキングをリセット 
+    #         if st.button('ランキングをリセット', key='reset_ranking'):
+    #             ranking_df = pd.DataFrame(columns=['Name', 'Group', 'Accuracy', 'Recall', 'Precision', 'F1-score', 'AUC', 'Comment', 'Submitted Time'])
+    #             ranking_df.to_csv(ranking_file_patn, index=False) 
 
-        elif authentication_status == False:
-            st.error('Username/password is incorrect')
-        # elif authentication_status == None:
-        #     st.warning('Please enter your username and password')
+    #     elif authentication_status == False:
+    #         st.error('Username/password is incorrect')
+    #     # elif authentication_status == None:
+    #     #     st.warning('Please enter your username and password')
 
     # ---------------------------------------------------------------------------------
 
