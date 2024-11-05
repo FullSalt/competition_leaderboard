@@ -7,7 +7,7 @@ import pytz
 import json
 import os
 import shutil
-import pygwalker as pyg
+# import pygwalker as pyg
 import streamlit.components.v1 as components
 
 from sklearn.metrics import recall_score
