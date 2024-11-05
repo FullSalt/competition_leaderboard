@@ -127,7 +127,7 @@ def app():
         st.title('管理者用')
 
         # ログインメソッドで入力フォームを配置
-        name, authentication_status, username = authenticator.login('Login', , location='sidebar')
+        name, authentication_status, username = authenticator.login('Login', location='sidebar')
         # print(name, authentication_status, username)
         # 返り値、authenticaton_statusの状態で処理を場合分け
         if authentication_status:
